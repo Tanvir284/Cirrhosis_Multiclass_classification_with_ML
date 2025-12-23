@@ -29,7 +29,7 @@ Using a **self-generated synthetic dataset** that mimics real-world medical data
 The following flowchart illustrates the data processing and modeling pipeline implemented in the notebook.
 
 ```mermaid
-graph TD
+flowchart TD
     subgraph Data_Ingestion
     A[Raw Self-Generated Dataset] --> B{Preprocessing Pipeline}
     end
@@ -60,3 +60,7 @@ graph TD
     M & N & O --> P[Temperature Scaling]
     P --> Q[Final Submission]
     end
+📊 Methodology Detailed1. Data & PreprocessingThe dataset involves a mix of numerical biomarkers (e.g., Bilirubin, Albumin) and categorical demographics.Imputation: Handled missing values using Median strategies for continuous variables to be robust against outliers.Feature Generation:Created _missing_count to capture data quality patterns per patient.Generated ratio features (e.g., Bilirubin / Albumin) to capture physiological interactions.2. Advanced Feature EncodingTo maximize signal from categorical variables:Frequency Encoding: Captures the prevalence of categories.OOF Target Encoding: A sophisticated technique where categorical levels are replaced by the mean target value. Crucially, this is done inside a Cross-Validation loop (Out-of-Fold) to prevent the model from memorizing the target (leakage).3. Hyperparameter Tuning (Optuna)Instead of basic Grid Search, Optuna was utilized for Bayesian Optimization. This efficiently searches the hyperparameter space for LightGBM, XGBoost, and CatBoost, optimizing specifically for Multi-class Log Loss.4. Ensemble & CalibrationThe final prediction is not reliant on a single model.Stacking: A meta-model (Logistic Regression) learns how to best combine predictions from the base models.Blending: A weighted average where weights are inversely proportional to the validation Log Loss (better models get higher weight).Temperature Scaling: A post-processing step that scales the logits of the ensemble output to ensure the predicted probability distribution matches the true distribution, further reducing the Log Loss.📉 Results & PerformanceThe models were evaluated using Multi-class Log Loss and Accuracy. The ensemble approach demonstrated a significant improvement over individual models.ApproachMethodPerformance NoteBaselineSingle LightGBMStrong baselineTunedOptuna XGB/LGBM/Cat~5-10% improvement in Log LossEnsembleStacking + BlendingReduced variance and improved generalizationFinalCalibrated EnsembleBest recorded Log Loss💻 Getting StartedPrerequisitesPython 3.10+Jupyter Notebook / LabInstallationClone the repo:Bashgit clone [https://github.com/Tanvir284/Cirrhosis_Multiclass_classification_with_ML.git](https://github.com/Tanvir284/Cirrhosis_Multiclass_classification_with_ML.git)
+Install dependencies:Bashpip install pandas numpy scikit-learn lightgbm xgboost catboost optuna matplotlib seaborn
+Run the notebook:Bashjupyter notebook cirrhosis-multiclass-classification-with-ml.ipynb
+🤝 ContributingContributions are welcome! Please feel free to submit a Pull Request.Fork the ProjectCreate your Feature Branch (git checkout -b feature/AmazingFeature)Commit your Changes (git commit -m 'Add some AmazingFeature')Push to the Branch (git push origin feature/AmazingFeature)Open a Pull Request📧 ContactTanvir - GitHub ProfileProject Link: https://github.com/Tanvir284/Cirrhosis_Multiclass_classification_with_ML
